@@ -7,7 +7,7 @@ pipeline{
     stage('1GetCode'){
       steps{
         sh "echo 'cloning the latest application version' "
-        git branch: 'feature', credentialsId: 'gitHubCredentials', url: 'https://github.com/LandmakTechnology/maven-web-application'
+        git branch: 'dev', credentialsId: 'gitHubCredentials', url: 'https://github.com/Solomolly/maven-web-application/tree/dev'
       }
     }
     stage('3Test+Build'){
@@ -31,17 +31,15 @@ pipeline{
     } 
     stage('8deploy2prod'){
       steps{
-        deploy adapters: [tomcat8(credentialsId: 'tomcat-credentials', path: '', url: 'http://35.170.249.131:8080/')], contextPath: null, war: 'target/*war'
+        deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'Olu', path: '', url: 'http://3.139.73.244:8080/manager/')], contextPath: null, war: 'target/*war'
       }
     }
 }
   post{
     always{
-      emailext body: '''Hey guys
-Please check build status.
-Thanks
-Landmark 
-+1 437 215 2483''', recipientProviders: [buildUser(), developers()], subject: 'success', to: 'paypal-team@gmail.com'
+      emailext body: '''Build status for review.
+
+Olusegun''', recipientProviders: [developers(), buildUser()], subject: 'build status', to: 'paypal team'
     }
     success{
       emailext body: '''Hey guys
