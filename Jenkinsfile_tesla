@@ -1,5 +1,5 @@
 node{
-  def mavenHome = tool name: 'maven3.8.6'
+  def mavenHome = tool name: 'maven3.9.12'
   stage('1cloneCode'){
     git "https://github.com/LandmakTechnology/maven-web-application"
   }
@@ -11,7 +11,7 @@ node{
     sh "${mavenHome}/bin/mvn  sonar:sonar"
   }
   stage('4uploadArtifacts'){
-    //sh "${mavenHome}/bin/mvn deploy"
+    sh "${mavenHome}/bin/mvn deploy"
     //http://52.53.227.31:8191/landmark/repository/tesla-fe-snapshots/
     //http://52.53.227.31:8191/landmark/repository/tesla-fe-releases/
     // vi pom.xml and added repository details   
@@ -19,7 +19,7 @@ node{
   } 
   stage('5deploy2UAT'){
     sh "echo 'deploy to UAT'  "
-    deploy adapters: [tomcat8(credentialsId: 'tomcat-credentials', path: '', url: 'http://35.170.249.131:8080/')], contextPath: null, war: 'target/*war'
+    deploy adapters: [tomcat9(credentialsId: 'tomcat-credentials', path: '', url: 'http://3.139.73.244:8080/')], contextPath: null, war: 'target/*war'
   }
   stage('6approvalGate'){
     sh "echo 'ready for review' "
@@ -29,13 +29,13 @@ node{
   }
   stage('7deploy2Prod'){
     sh "sleep  50"
-    deploy adapters: [tomcat8(credentialsId: 'tomcat-credentials', path: '', url: 'http://35.170.249.131:8080/')], contextPath: null, war: 'target/*war'
+    deploy adapters: [tomcat9(credentialsId: 'tomcat-credentials', path: '', url: 'http://3.139.73.244:8080/')], contextPath: null, war: 'target/*war'
   }
   stage('8emailNotification'){
     emailext body: '''Hi All,
 
 Check Build status.
 
-Landmark Technologies''', recipientProviders: [buildUser(), developers(), upstreamDevelopers(), brokenBuildSuspects(), brokenTestsSuspects(), contributor()], subject: 'build status', to: 'tesla-app@gmail.com'
+Olu''', recipientProviders: [buildUser(), developers(), upstreamDevelopers(), brokenBuildSuspects(), brokenTestsSuspects(), contributor()], subject: 'build status', to: 'tesla-app@gmail.com'
   }
 }
