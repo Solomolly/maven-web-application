@@ -23,12 +23,12 @@ pipeline{
         sh "mvn sonar:sonar"
       }
     }
-    /*
     stage('5uploadNexus'){
       steps{
         sh "mvn deploy"
       }
     } 
+    /*
     stage('8deploy2prod'){
       steps{
         deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'Olu', path: '', url: 'http://3.139.73.244:8080/manager/')], contextPath: null, war: 'target/*war'
